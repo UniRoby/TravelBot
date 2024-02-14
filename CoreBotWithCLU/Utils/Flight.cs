@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace CoreBotCLU.Utils
+namespace TravelBot.Utils
 {
     public class Flight
     {

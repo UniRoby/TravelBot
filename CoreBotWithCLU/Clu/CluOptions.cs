@@ -4,7 +4,7 @@
 using System.Collections.Generic;
 using Azure.AI.Language.Conversations;
 
-namespace Microsoft.BotBuilderSamples.Clu
+namespace TravelBot.Clu
 {
     /// <summary>
     /// Options for interacting with the CLU service. 

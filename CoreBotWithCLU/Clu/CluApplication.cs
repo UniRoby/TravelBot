@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Microsoft.BotBuilderSamples.Clu
+namespace TravelBot.Clu
 {
     /// <summary>
     /// Data describing a CLU application.

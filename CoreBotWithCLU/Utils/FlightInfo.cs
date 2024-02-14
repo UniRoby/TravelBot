@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace CoreBotCLU.Utils
+namespace TravelBot.Utils
 {
     public class FlightInfo
     {

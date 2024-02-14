@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using CoreBotCLU.Models;
+using TravelBot.Models;
 using System.Linq;
 
-namespace CoreBotCLU.Repository
+namespace TravelBot.Repository
 {
 
 

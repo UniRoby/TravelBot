@@ -9,7 +9,7 @@ using Microsoft.Bot.Connector.Authentication;
 using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Logging;
 
-namespace Microsoft.BotBuilderSamples
+namespace TravelBot
 {
     public class AdapterWithErrorHandler : CloudAdapter
     {

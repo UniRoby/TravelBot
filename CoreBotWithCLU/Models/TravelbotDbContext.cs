@@ -6,7 +6,7 @@ using System.IO;
 
 
 
-namespace CoreBotCLU.Models {
+namespace TravelBot.Models {
 
 public partial class TravelbotDbContext : DbContext
 {

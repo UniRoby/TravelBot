@@ -4,10 +4,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Bot.Builder;
-using Microsoft.BotBuilderSamples.Clu;
+using TravelBot.Clu;
 using Newtonsoft.Json;
 
-namespace Microsoft.BotBuilderSamples
+namespace TravelBot
 {
     /// <summary>
     /// An <see cref="IRecognizerConvert"/> implementation that provides helper methods and properties to interact with

@@ -8,10 +8,10 @@ using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Schema;
 using Microsoft.Recognizers.Text.DataTypes.TimexExpression;
-using CoreBotCLU.Utils;
+using TravelBot.Utils;
 using System.ComponentModel;
 
-namespace Microsoft.BotBuilderSamples.Dialogs
+namespace TravelBot.Dialogs
 {
     public class DateResolverDialog : CancelAndHelpDialog
     {

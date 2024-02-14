@@ -2,7 +2,7 @@
 using System;
 using System.Text.RegularExpressions;
 
-namespace CoreBotCLU.Utils
+namespace TravelBot.Utils
 {
     public class WordNumberConverter
     {

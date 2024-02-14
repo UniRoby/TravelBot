@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 
 
-namespace Microsoft.BotBuilderSamples
+namespace TravelBot
 {
     public class Program
     {

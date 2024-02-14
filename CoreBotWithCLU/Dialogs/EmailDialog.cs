@@ -7,9 +7,9 @@ using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Schema;
 using Microsoft.Recognizers.Text.DataTypes.TimexExpression;
-using CoreBotCLU.Utils;
-using CoreBotCLU.Repository;
-using CoreBotCLU.Models;
+using TravelBot.Utils;
+using TravelBot.Repository;
+using TravelBot.Models;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.IO;
@@ -25,7 +25,7 @@ using System.Text.RegularExpressions;
 using System.Globalization;
 
 
-namespace Microsoft.BotBuilderSamples.Dialogs
+namespace TravelBot.Dialogs
 {
     public class EmailDialog : CancelAndHelpDialog
     {

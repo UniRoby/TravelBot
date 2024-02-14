@@ -3,7 +3,7 @@
 
 using Newtonsoft.Json;
 
-namespace Microsoft.BotBuilderSamples.Clu
+namespace TravelBot.Clu
 {
     public class CluEntity
     {

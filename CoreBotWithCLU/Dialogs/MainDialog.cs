@@ -10,10 +10,10 @@ using System.Collections.Generic;
 using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Logging;
 using Microsoft.Recognizers.Text.DataTypes.TimexExpression;
-using CoreBotCLU.Repository;
-using CoreBotCLU.Models;
+using TravelBot.Repository;
+using TravelBot.Models;
 using System.Globalization;
-using CoreBotCLU.Utils;
+using TravelBot.Utils;
 using System.ComponentModel;
 using System.Linq;
 using Microsoft.IdentityModel.Tokens;
@@ -22,7 +22,7 @@ using System.IO;
 
 
 
-namespace Microsoft.BotBuilderSamples.Dialogs
+namespace TravelBot.Dialogs
 {
     public class MainDialog : ComponentDialog
     {

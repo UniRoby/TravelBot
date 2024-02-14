@@ -1,7 +1,7 @@
 ﻿using System;
-using Microsoft.BotBuilderSamples;
+using TravelBot;
 
-namespace CoreBotCLU.Utils
+namespace TravelBot.Utils
 {
     public class BookingConverter
     {

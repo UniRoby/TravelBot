@@ -16,7 +16,7 @@ using Microsoft.IdentityModel.Tokens;
 
 
 
-namespace CoreBotCLU.Utils
+namespace TravelBot.Utils
 {
     public class SearchFlights
     {

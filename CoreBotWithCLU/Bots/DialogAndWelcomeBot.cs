@@ -11,9 +11,9 @@ using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-using CoreBotCLU.Models;
+using TravelBot.Models;
 
-namespace Microsoft.BotBuilderSamples.Bots
+namespace TravelBot.Bots
 {
     public class DialogAndWelcomeBot<T> : DialogBot<T>
         where T : Dialog

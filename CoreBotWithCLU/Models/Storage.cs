@@ -13,7 +13,7 @@ using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using System.Diagnostics;
 
-namespace CoreBotCLU.Models
+namespace TravelBot.Models
 {
     public class Storage
     {

@@ -9,7 +9,7 @@ using System.IO;
 
 
 
-namespace CoreBotCLU.Utils
+namespace TravelBot.Utils
 {
 
 

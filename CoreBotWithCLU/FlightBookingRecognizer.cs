@@ -4,10 +4,10 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Bot.Builder;
-using Microsoft.BotBuilderSamples.Clu;
+using TravelBot.Clu;
 using Microsoft.Extensions.Configuration;
 
-namespace Microsoft.BotBuilderSamples
+namespace TravelBot
 {
     public class FlightBookingRecognizer : IRecognizer
     {

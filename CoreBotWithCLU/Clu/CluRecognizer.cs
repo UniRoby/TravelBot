@@ -12,7 +12,7 @@ using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.TraceExtensions;
 using Newtonsoft.Json.Linq;
 
-namespace Microsoft.BotBuilderSamples.Clu
+namespace TravelBot.Clu
 {
     /// <summary>
     /// Class for a recognizer that utilizes the CLU service.

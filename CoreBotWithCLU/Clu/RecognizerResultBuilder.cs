@@ -10,7 +10,7 @@ using Microsoft.Bot.Builder.Dialogs;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Microsoft.BotBuilderSamples.Clu
+namespace TravelBot.Clu
 {
     /// <summary>
     /// A helper class that creates and populate <see cref="RecognizerResult"/> from a <see cref="AnalyzeConversationResult"/> instance.

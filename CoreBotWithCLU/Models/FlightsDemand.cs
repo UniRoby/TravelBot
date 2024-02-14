@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CoreBotCLU.Models;
+namespace TravelBot.Models;
 
 public partial class FlightsDemand
 {
