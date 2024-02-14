@@ -419,7 +419,11 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private  Attachment CreateDynamicCardAttachment(string partenza, string destinazione, string dataPartenza, string dataRitorno, string numeroPasseggeri, string budget)
             {
-                var adaptiveCardJson = File.ReadAllText("C:\\Users\\User\\Source\\Repos\\CloudComputing\\CoreBotWithCLU\\Cards\\changeBookingDetailCard.json");
+
+            //var adaptiveCardJson = File.ReadAllText("C:\\Users\\User\\Source\\Repos\\CloudComputing\\CoreBotWithCLU\\Cards\\changeBookingDetailCard.json");
+                Storage storage = new Storage();
+                string adaptiveCardJson = storage.GetCardFromStorage("container-cards-progetto-cloud", "changeBookingDetailCard.json");
+                
                 dynamic obj = JsonConvert.DeserializeObject(adaptiveCardJson);
 
                 obj["body"][1]["value"] = partenza;
@@ -441,13 +445,13 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 obj["body"][5]["placeholder"] = int.Parse(numeroPasseggeri);
 
 
-                if (budget != null)
+                if (budget != null && budget!="0")
                     {
-                        obj["body"][6]["value"] = int.Parse(budget);
-                        obj["body"][6]["placeholder"] = int.Parse(budget);
+                        obj["body"][6]["value"] = double.Parse(budget);
+                        obj["body"][6]["placeholder"] = double.Parse(budget);
                 }
-
-
+                Console.WriteLine("\n--------------------------------------------------------------------------");
+                Console.WriteLine(obj["body"][6]["placeholder"]);
                 var adaptiveCardAttachment = new Attachment()
                 {
                     ContentType = "application/vnd.microsoft.card.adaptive",
@@ -460,13 +464,15 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private static Attachment CreateTravelDetailsAdaptiveCard(FlightInfo flightInfo,string passengersNumber)
         {
-            var adaptiveCardJson = File.ReadAllText("C:\\Users\\User\\Source\\Repos\\CloudComputing\\CoreBotWithCLU\\Cards\\flightCard.json");
+            //var adaptiveCardJson = File.ReadAllText("C:\\Users\\User\\Source\\Repos\\CloudComputing\\CoreBotWithCLU\\Cards\\flightCard.json");
+            Storage storage = new Storage();
+            string adaptiveCardJson = storage.GetCardFromStorage("container-cards-progetto-cloud", "flightCard.json");
             dynamic obj = JsonConvert.DeserializeObject(adaptiveCardJson);
 
             DateAndTimeConverter dateAndTimeConverter = new DateAndTimeConverter();
 
-            var mainCardJson = File.ReadAllText("C:\\Users\\User\\Source\\Repos\\CloudComputing\\CoreBotWithCLU\\Cards\\mainPart.json");
-
+            //var mainCardJson = File.ReadAllText("C:\\Users\\User\\Source\\Repos\\CloudComputing\\CoreBotWithCLU\\Cards\\mainPart.json");
+            string mainCardJson = storage.GetCardFromStorage("container-cards-progetto-cloud", "mainPart.json");
 
             var layover = flightInfo.flights.Count;
 
@@ -619,6 +625,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
             return choices;
         }
+
+
+
 
         private List<FlightInfo> GetRandomFlights()
         {

@@ -59,8 +59,8 @@
         {
             "type": "Input.Text",
             "label": "Budget",
-            "placeholder": "Inserisci il tuo budget",
             "id": "budgetId",
+            "placeholder": "Inserisci il tuo budget",
             "value": ""
         }
     ],

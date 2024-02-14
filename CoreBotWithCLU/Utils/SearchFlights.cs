@@ -37,6 +37,8 @@ namespace CoreBotCLU.Utils
             // Ottieni la connection string e assegnala a una variabile di istanza
             apiKey = config.GetConnectionString("SEARCH_FLIGHT_API_KEY");
 
+            // apiKey =  Environment.GetEnvironmentVariable("SEARCH_FLIGHT_API_KEY");
+
             ht.Add("engine", "google_flights");
             ht.Add("hl", "it");
             ht.Add("gl", "it");

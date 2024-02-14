@@ -11,6 +11,8 @@ using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
+using CoreBotCLU.Models;
+
 namespace Microsoft.BotBuilderSamples.Bots
 {
     public class DialogAndWelcomeBot<T> : DialogBot<T>
@@ -29,7 +31,10 @@ namespace Microsoft.BotBuilderSamples.Bots
                 // To learn more about Adaptive Cards, see https://aka.ms/msbot-adaptivecards for more details.
                 if (member.Id != turnContext.Activity.Recipient.Id)
                 {
-                    var welcomeCard = CreateAdaptiveCardAttachment();
+                    Storage storage = new Storage();
+                    string adaptiveCardJson = storage.GetCardFromStorage("container-cards-progetto-cloud", "welcomeCard.json");
+                    var welcomeCard = CreateDynamicCardAttachment(adaptiveCardJson);
+                    //var welcomeCard = CreateAdaptiveCardAttachment();
                     var response = MessageFactory.Attachment(welcomeCard, ssml: "Benvenuto su Travel BOT!");
                     await turnContext.SendActivityAsync(response, cancellationToken);
                     await Dialog.RunAsync(turnContext, ConversationState.CreateProperty<DialogState>("DialogState"), cancellationToken);
@@ -37,23 +42,19 @@ namespace Microsoft.BotBuilderSamples.Bots
             }
         }
 
-        // Load attachment from embedded resource.
-        private Attachment CreateAdaptiveCardAttachment()
-        {
-            var cardResourcePath = "CoreBotCLU.Cards.welcomeCard.json";
 
-            using (var stream = GetType().Assembly.GetManifestResourceStream(cardResourcePath))
+        public Attachment CreateDynamicCardAttachment(string adaptiveCardJson)
+        {
+            dynamic obj = JsonConvert.DeserializeObject(adaptiveCardJson);
+
+            // Crea un Attachment utilizzando l'oggetto dinamico come contenuto
+            var adaptiveCardAttachment = new Attachment()
             {
-                using (var reader = new StreamReader(stream))
-                {
-                    var adaptiveCard = reader.ReadToEnd();
-                    return new Attachment()
-                    {
-                        ContentType = "application/vnd.microsoft.card.adaptive",
-                        Content = JsonConvert.DeserializeObject(adaptiveCard),
-                    };
-                }
-            }
+                ContentType = "application/vnd.microsoft.card.adaptive",
+                Content = obj
+            };
+
+            return adaptiveCardAttachment;
         }
     }
 }
