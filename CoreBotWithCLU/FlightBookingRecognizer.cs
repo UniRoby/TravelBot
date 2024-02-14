@@ -23,7 +23,7 @@ namespace Microsoft.BotBuilderSamples
                     configuration["CluDeploymentName"],
                     configuration["CluAPIKey"],
                     "https://" + configuration["CluAPIHostName"]);
-                var recognizerOptions = new CluOptions(cluApplication) {Language = "en"};
+                var recognizerOptions = new CluOptions(cluApplication) {Language = "it"};
 
                 _recognizer = new CluRecognizer(recognizerOptions);
             }

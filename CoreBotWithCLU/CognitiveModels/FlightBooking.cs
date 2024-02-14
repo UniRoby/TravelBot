@@ -18,8 +18,8 @@ namespace Microsoft.BotBuilderSamples
         public enum Intent
         {
             BookFlight,
+            GetEmail,
             Cancel,
-            GetWeather,
             None
         }
 
@@ -65,17 +65,34 @@ namespace Microsoft.BotBuilderSamples
         {
             public CluEntity[] Entities;
 
-            public CluEntity[] GetFromCityList() => Entities.Where(e => e.Category == "fromCity").ToArray();
+            public CluEntity[] GetFromCityList() => Entities.Where(e => e.Category == "Partenza").ToArray();
 
-            public CluEntity[] GetToCityList() => Entities.Where(e => e.Category == "toCity").ToArray();
+            public CluEntity[] GetToCityList() => Entities.Where(e => e.Category == "Destinazione").ToArray();
 
-            public CluEntity[] GetFlightDateList() => Entities.Where(e => e.Category == "flightDate").ToArray();
+            public CluEntity[] GetFlightDateList() => Entities.Where(e => e.Category == "DataPartenza").ToArray();
+
+            public CluEntity[] GetReturnFlightDateList() => Entities.Where(e => e.Category == "DataRitorno").ToArray();
+
+            public CluEntity[] GetPassengersNumberList() => Entities.Where(e => e.Category == "NumeroPasseggeri").ToArray();
+
+            public CluEntity[] GetBudgetList() => Entities.Where(e => e.Category == "Budget").ToArray();
+
+            public CluEntity[] GetEmailList() => Entities.Where(e => e.Category == "email").ToArray();
 
             public string GetFromCity() => GetFromCityList().FirstOrDefault()?.Text;
 
             public string GetToCity() => GetToCityList().FirstOrDefault()?.Text;
 
             public string GetFlightDate() => GetFlightDateList().FirstOrDefault()?.Text;
+
+            public string GetReturnFlightDate() => GetReturnFlightDateList().FirstOrDefault()?.Text;
+
+            public string GetPassengersNumber() => GetPassengersNumberList().FirstOrDefault()?.Text;
+
+            public string GetBudget() => GetBudgetList().FirstOrDefault()?.Text;
+
+            public string GetEmail() => GetEmailList().FirstOrDefault()?.Text;
+
         }
     }
 }

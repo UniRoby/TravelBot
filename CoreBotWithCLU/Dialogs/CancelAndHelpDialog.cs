@@ -11,8 +11,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 {
     public class CancelAndHelpDialog : ComponentDialog
     {
-        private const string HelpMsgText = "Show help here";
-        private const string CancelMsgText = "Cancelling...";
+        private const string HelpMsgText = "Testo di Aiuto";
+        private const string CancelMsgText = "Annullo...";
 
         public CancelAndHelpDialog(string id)
             : base(id)
@@ -38,14 +38,14 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
                 switch (text)
                 {
-                    case "help":
+                    case "aiuto":
                     case "?":
                         var helpMessage = MessageFactory.Text(HelpMsgText, HelpMsgText, InputHints.ExpectingInput);
                         await innerDc.Context.SendActivityAsync(helpMessage, cancellationToken);
                         return new DialogTurnResult(DialogTurnStatus.Waiting);
 
-                    case "cancel":
-                    case "quit":
+                    case "annulla":
+                    case "esci":
                         var cancelMessage = MessageFactory.Text(CancelMsgText, CancelMsgText, InputHints.IgnoringInput);
                         await innerDc.Context.SendActivityAsync(cancelMessage, cancellationToken);
                         return await innerDc.CancelAllDialogsAsync(cancellationToken);

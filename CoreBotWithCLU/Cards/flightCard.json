@@ -1,0 +1,146 @@
+{
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+    "version": "1.0",
+    "type": "AdaptiveCard",
+    "speak": "<s>Your flight is confirmed for you and 3 other passengers from San Francisco to Amsterdam on Friday, October 10 8:30 AM</s>",
+    "body": [
+        {
+            "type": "ColumnSet",
+            "spacing": "Large",
+            "columns": [
+                {
+                    "type": "Column",
+                    "width": 1,
+                    "items": [
+                        {
+                            "type": "TextBlock",
+                            "text": "Itinerario Volo",
+                            "wrap": true,
+                            "style": "heading",
+                            "size": "Large",
+                            "color": "Accent"
+                        }
+                    ]
+                },
+                {
+                    "type": "Column",
+                    "width": "auto",
+                    "verticalContentAlignment": "Center",
+                    "items": [
+                        {
+                            "type": "Image",
+                            "url": "https://adaptivecards.io/content/airplane.png",
+                            "altText": "Flight to",
+                            "size": "Small"
+                        }
+                    ]
+                }
+            ],
+            "separator": true
+        },
+
+        {
+            "type": "ColumnSet",
+            "spacing": "Large",
+            "columns": [
+                {
+                    "type": "Column",
+                    "width": 1,
+                    "items": [
+                        {
+                            "type": "TextBlock",
+                            "text": "Totale",
+                            "size": "Medium",
+                            "isSubtle": true,
+                            "wrap": true,
+                            "color": "Warning"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "text": "Durata Viaggio",
+                            "size": "Medium",
+                            "isSubtle": true,
+                            "wrap": true,
+                            "color": "Warning"
+                        }
+                    ]
+                },
+                {
+                    "type": "Column",
+                    "width": 1,
+                    "items": [
+                        {
+                            "type": "TextBlock",
+                            "horizontalAlignment": "Right",
+                            "text": "prezzo",
+                            "size": "Medium",
+                            "weight": "Bolder",
+                            "wrap": true,
+                            "color": "Good"
+                        },
+                        {
+                            "type": "TextBlock",
+                            "horizontalAlignment": "Right",
+                            "text": "tempo",
+                            "size": "Medium",
+                            "weight": "Bolder",
+                            "wrap": true
+                        }
+                    ]
+                }
+            ],
+            "separator": true
+        },
+        {
+            "type": "ColumnSet",
+            "spacing": "Medium",
+            "columns": [
+                {
+                    "type": "Column",
+                    "width": 1,
+                    "items": [
+                        {
+                            "type": "TextBlock",
+                            "text": "Numero Passeggeri",
+                            "weight": "Bolder",
+                            "size": "Default",
+                            "isSubtle": false,
+                            "wrap": true
+                        },
+                        {
+                            "type": "TextBlock",
+                            "text": "Scali",
+                            "weight": "Bolder",
+                            "size": "Default",
+                            "isSubtle": true,
+                            "wrap": true,
+                            "color": "Default"
+                        }
+                    ]
+                },
+                {
+                    "type": "Column",
+                    "width": 1,
+                    "items": [
+                        {
+                            "type": "TextBlock",
+                            "horizontalAlignment": "Right",
+                            "text": "1",
+                            "size": "Medium",
+                            "wrap": true
+                        },
+                        {
+                            "type": "TextBlock",
+                            "horizontalAlignment": "Right",
+                            "text": "1/nessuno",
+                            "size": "Medium",
+                            "wrap": true
+                        }
+                    ]
+                }
+            ],
+            "separator": true,
+            "backgroundImage": ""
+        }
+    ]
+}

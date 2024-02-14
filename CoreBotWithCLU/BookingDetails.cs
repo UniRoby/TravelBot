@@ -10,5 +10,14 @@ namespace Microsoft.BotBuilderSamples
         public string Origin { get; set; }
 
         public string TravelDate { get; set; }
+
+        public string ReturnDate { get; set; }
+
+        public string PassengersNumber { get; set; }
+
+        public string Budget { get; set; }
+
+
     }
+
 }

@@ -7,6 +7,9 @@ using Microsoft.Bot.Builder;
 using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Schema;
 using Microsoft.Extensions.Logging;
+using System;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Microsoft.BotBuilderSamples.Bots
 {
@@ -33,7 +36,21 @@ namespace Microsoft.BotBuilderSamples.Bots
 
         public override async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = default(CancellationToken))
         {
+           
             await base.OnTurnAsync(turnContext, cancellationToken);
+
+            var activity = turnContext.Activity;
+           
+
+            // Execute on incoming messages
+            if (activity.Type == ActivityTypes.Message)
+            {
+                if (string.IsNullOrWhiteSpace(activity.Text) && activity.Value != null)
+                {
+                    activity.Text = JsonConvert.SerializeObject(activity.Value);
+                }
+            }
+
 
             // Save any state changes that might have occurred during the turn.
             await ConversationState.SaveChangesAsync(turnContext, false, cancellationToken);
@@ -42,10 +59,32 @@ namespace Microsoft.BotBuilderSamples.Bots
 
         protected override async Task OnMessageActivityAsync(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
         {
-            Logger.LogInformation("Running dialog with Message Activity.");
+            if (string.IsNullOrEmpty(turnContext.Activity.Text) && turnContext.Activity.Value != null)
+            {
+                
 
-            // Run the Dialog with the new message Activity.
+                JObject values = (turnContext.Activity.Value as JObject);
+
+                var origin = values["originId"]?.ToString();
+                var destination = values["destinationId"]?.ToString();
+                var travelDate = values["dateId"]?.ToString();
+                var returnDate = values["returnDateId"]?.ToString();
+                var passengersNumber = values["numPassengerId"]?.ToString();
+                var budget = values["budgetId"]?.ToString();
+
+                string allValues = "{" + origin + "} " + "{" + destination + "} " + "{" + travelDate + "} " + "{" + returnDate + "} " + "{" + passengersNumber + "} " + "{" + budget + "}";
+
+                Console.WriteLine("\n----------------------------------------------------------------------------------------");
+                Console.WriteLine(allValues);
+                Console.WriteLine("\n----------------------------------------------------------------------------------------");
+
+                turnContext.Activity.Text = allValues;
+
+
+            }
+            // Esegui il dialogo passando i dati ottenuti
             await Dialog.RunAsync(turnContext, ConversationState.CreateProperty<DialogState>("DialogState"), cancellationToken);
+
         }
     }
 }

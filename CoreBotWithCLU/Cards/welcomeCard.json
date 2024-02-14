@@ -1,46 +1,32 @@
 ﻿{
-  "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
-  "type": "AdaptiveCard",
-  "version": "1.0",
-  "body": [
-    {
-      "type": "Image",
-      "url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQtB3AwMUeNoq4gUBGe6Ocj8kyh3bXa9ZbV7u1fVKQoyKFHdkqU",
-      "size": "stretch"
-    },
-    {
-      "type": "TextBlock",
-      "spacing": "medium",
-      "size": "default",
-      "weight": "bolder",
-      "text": "Welcome to Bot Framework!",
-      "wrap": true,
-      "maxLines": 0
-    },
-    {
-      "type": "TextBlock",
-      "size": "default",
-      "isSubtle": true,
-      "text": "Now that you have successfully run your bot, follow the links in this Adaptive Card to expand your knowledge of Bot Framework.",
-      "wrap": true,
-      "maxLines": 0
-    }
-  ],
-  "actions": [
-    {
-      "type": "Action.OpenUrl",
-      "title": "Get an overview",
-      "url": "https://docs.microsoft.com/en-us/azure/bot-service/?view=azure-bot-service-4.0"
-    },
-    {
-      "type": "Action.OpenUrl",
-      "title": "Ask a question",
-      "url": "https://stackoverflow.com/questions/tagged/botframework"
-    },
-    {
-      "type": "Action.OpenUrl",
-      "title": "Learn how to deploy",
-      "url": "https://docs.microsoft.com/en-us/azure/bot-service/bot-builder-howto-deploy-azure?view=azure-bot-service-4.0"
-    }
-  ]
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+    "type": "AdaptiveCard",
+    "version": "1.0",
+    "body": [
+        {
+            "type": "Image",
+            "url": "https://storageaccountprojcloud.blob.core.windows.net/container-progetto-cloud/BotLogo.png?sp=r&st=2024-02-02T18:26:22Z&se=2024-08-31T22:00:00Z&spr=https&sv=2022-11-02&sr=c&sig=xv6vvVpt901525Ld6IWdEFz7dXaR%2Fz%2BaHA%2F3kdhoI6A%3D",
+            "size": "stretch"
+        },
+        {
+            "type": "TextBlock",
+            "spacing": "medium",
+            "size": "default",
+            "weight": "bolder",
+            "text": "Benvenuto su TravelBot",
+            "wrap": true,
+            "maxLines": 0
+        },
+        {
+            "type": "TextBlock",
+            "size": "default",
+            "isSubtle": true,
+            "text": "Ciao! Sono Travel Bot e ti aiuterò a trovare la tua prossima meta!",
+            "wrap": true,
+            "maxLines": 0
+        }
+     
+    ],
+   
+
 }

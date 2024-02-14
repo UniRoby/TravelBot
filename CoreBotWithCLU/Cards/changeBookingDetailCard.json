@@ -1,0 +1,77 @@
+﻿{
+    "$schema": "http://adaptivecards.io/schemas/adaptive-card.json",
+    "type": "AdaptiveCard",
+    "version": "1.0",
+    "body": [
+        {
+            "type": "TextBlock",
+            "size": "Medium",
+            "weight": "Bolder",
+            "text": "Rivedi criteri di ricerca",
+            "horizontalAlignment": "Center",
+            "wrap": true,
+            "style": "heading"
+        },
+        {
+            "type": "Input.Text",
+            "label": "Partenza",
+            "id": "originId",
+            "isRequired": true,
+            "errorMessage": "Name is required",
+            "placeholder": "Città di partenza",
+            "value": ""
+        },
+        {
+            "type": "Input.Text",
+            "label": "Destinazione",
+            "id": "destinationId",
+            "isRequired": true,
+            "errorMessage": "La destinazione è richiesta",
+            "placeholder": "Città di destinazione",
+            "value": ""
+        },
+        {
+            "type": "Input.Text",
+            "label": "Data Partenza",
+            "id": "dateId",
+            "isRequired": true,
+            "errorMessage": "La data è richiesta",
+            "placeholder": "gg/mm/aaaa",
+            "value": ""
+        },
+        {
+            "type": "Input.Text",
+            "label": "Data Ritorno",
+            "id": "returnDateId",
+            "placeholder": "gg/mm/aaaa",
+            "value": ""
+        },
+        {
+            "type": "Input.Number",
+            "label": "Numero Passeggeri",
+            "placeholder": "Inserisci il numero dei passeggeri",
+            "min": 1,
+            "max": 5,
+            "id": "numPassengerId",
+            "errorMessage": "Il numero dei passeggeri deve essere compreso tra 1 e 5",
+            "value": ""
+        },
+        {
+            "type": "Input.Text",
+            "label": "Budget",
+            "placeholder": "Inserisci il tuo budget",
+            "id": "budgetId",
+            "value": ""
+        }
+    ],
+    "actions": [
+        {
+            "type": "Action.Submit",
+            "title": "Conferma",
+            "data": {
+                "id": "1234567890"
+            }
+        }
+    ]
+}
+

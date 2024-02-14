@@ -1,0 +1,99 @@
+{
+    "type": "ColumnSet",
+    "separator": true,
+    "columns": [
+        {
+            "type": "Column",
+            "width": 1,
+            "items": [
+                {
+                    "type": "TextBlock",
+                    "text": "Partenza da",
+                    "wrap": true,
+                    "style": "default",
+                    "weight": "Bolder",
+                    "color": "Accent"
+                },
+                {
+                    "type": "TextBlock",
+                    "text": "Madrid",
+                    "isSubtle": true,
+                    "wrap": true,
+                    "spacing": "None"
+                },
+                {
+                    "type": "TextBlock",
+                    "size": "ExtraLarge",
+                    "color": "Accent",
+                    "text": "MAD",
+                    "spacing": "None",
+                    "wrap": true
+                },
+                {
+                    "type": "TextBlock",
+                    "text": "mar 30 mag 2017 21:25",
+                    "weight": "Bolder",
+                    "spacing": "None",
+                    "wrap": true
+                }
+            ]
+        },
+        {
+            "type": "Column",
+            "width": "auto",
+            "verticalContentAlignment": "Center",
+            "items": [
+                {
+                    "type": "Image",
+                    "url": "https://adaptivecards.io/content/airplane.png",
+                    "altText": "Flight to",
+                    "size": "Small",
+                    "spacing": "None"
+                }
+            ]
+        },
+        {
+            "type": "Column",
+            "width": 1,
+            "items": [
+                {
+                    "type": "TextBlock",
+                    "text": "Arrivo a",
+                    "wrap": true,
+                    "horizontalAlignment": "Right",
+                    "style": "default",
+                    "weight": "Bolder",
+                    "color": "Accent",
+                    "fontType": "Default"
+                },
+                {
+                    "type": "TextBlock",
+                    "text": "Londra",
+                    "horizontalAlignment": "Right",
+                    "isSubtle": true,
+                    "wrap": true,
+                    "spacing": "None"
+                },
+                {
+                    "type": "TextBlock",
+                    "size": "ExtraLarge",
+                    "color": "Accent",
+                    "text": "LND",
+                    "horizontalAlignment": "Right",
+                    "spacing": "None",
+                    "wrap": true
+                },
+                {
+                    "type": "TextBlock",
+                    "text": "mar 30 mag 2017 23:25",
+                    "weight": "Bolder",
+                    "horizontalAlignment": "Right",
+                    "spacing": "None",
+                    "wrap": true
+                }
+            ]
+        }
+    ],
+    "spacing": "Large",
+    "separator": true
+}
