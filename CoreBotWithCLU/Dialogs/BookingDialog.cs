@@ -301,9 +301,6 @@ namespace Microsoft.BotBuilderSamples.Dialogs
                 this.flightOptions = searchFlights.StartSearch();
             }
 
-            this.flightOptions = GetRandomFlights();
-
-
             if (this.flightOptions == null || this.flightOptions.Count==0) {
                 await stepContext.Context.SendActivityAsync("Nessun volo trovato");
                 return await stepContext.EndDialogAsync(null, cancellationToken);
