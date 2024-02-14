@@ -23,6 +23,7 @@ using System.Linq;
 using System.Reflection.Metadata.Ecma335;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using Microsoft.IdentityModel.Tokens;
 
 
 namespace Microsoft.BotBuilderSamples.Dialogs
@@ -300,8 +301,8 @@ namespace Microsoft.BotBuilderSamples.Dialogs
             {
                 this.flightOptions = searchFlights.StartSearch();
             }
-
-            if (this.flightOptions == null || this.flightOptions.Count==0) {
+            
+            if (this.flightOptions.IsNullOrEmpty() ) {
                 await stepContext.Context.SendActivityAsync("Nessun volo trovato");
                 return await stepContext.EndDialogAsync(null, cancellationToken);
             }
