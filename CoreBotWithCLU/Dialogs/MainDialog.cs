@@ -158,7 +158,9 @@ namespace Microsoft.BotBuilderSamples.Dialogs
 
         private Attachment CreateThanksCardAttachment()
         {
-            var adaptiveCardJson = File.ReadAllText("C:\\Users\\User\\Source\\Repos\\CloudComputing\\CoreBotWithCLU\\Cards\\thanksCard.json");
+            // var adaptiveCardJson = File.ReadAllText("C:\\Users\\User\\Source\\Repos\\CloudComputing\\CoreBotWithCLU\\Cards\\thanksCard.json");
+            Storage storage = new Storage();
+            string adaptiveCardJson = storage.GetCardFromStorage("container-cards-progetto-cloud", "thanksCard.json");
             dynamic obj = JsonConvert.DeserializeObject(adaptiveCardJson);
 
             var adaptiveCardAttachment = new Attachment()
