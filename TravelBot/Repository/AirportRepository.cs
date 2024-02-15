@@ -40,6 +40,44 @@ namespace TravelBot.Repository
             return iataCities;
         }
 
+        public string ExtractCity(string city)
+        {
+            string cityExtracted;
+            city = city.ToLower();
+            try
+            {
+                cityExtracted = (from a in Context.Airports
+                              where city.Contains(a.CityIt.ToLower())
+                                 select a.CityIt
+                                ).FirstOrDefault();
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return cityExtracted;
+        }
+
+        public string GetIataContainedInValue(string value)
+        {
+            var iata="";
+            value = value.ToLower();
+            try
+            {
+                iata = (from a in Context.Airports
+                              where value.Contains(a.CityIt.ToLower()) || value.Contains(a.IataCode.ToLower())
+                                select a.IataCode
+                                ).FirstOrDefault();
+
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return iata;
+        }
+
         public bool CityExists(string city)
         {
             city = city.ToLower();
@@ -47,7 +85,7 @@ namespace TravelBot.Repository
             try
             {
                 result = (from a in Context.Airports
-                          where a.CityIt.ToLower() == city
+                          where a.CityIt.ToLower() == city || city.Contains(a.IataCode.ToLower())
                           select a.CityIt
                                 ).FirstOrDefault();
 

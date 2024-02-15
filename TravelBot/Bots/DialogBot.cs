@@ -72,7 +72,7 @@ namespace TravelBot.Bots
                 var passengersNumber = values["numPassengerId"]?.ToString();
                 var budget = values["budgetId"]?.ToString();
 
-                string allValues = "{" + origin + "} " + "{" + destination + "} " + "{" + travelDate + "} " + "{" + returnDate + "} " + "{" + passengersNumber + "} " + "{" + budget + "}";
+                string allValues = "{" + origin + "}," + "{" + destination + "}," + "{" + travelDate + "}," + "{" + returnDate + "}," + "{" + passengersNumber + "}," + "{" + budget + "}";
 
                 Console.WriteLine("\n----------------------------------------------------------------------------------------");
                 Console.WriteLine(allValues);

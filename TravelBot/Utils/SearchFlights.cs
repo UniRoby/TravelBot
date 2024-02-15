@@ -93,6 +93,8 @@ namespace TravelBot.Utils
                     foreach (JObject flight_Info in otherFlights)
                     {
                         flightInfoList.Add(ExtractFlightInfo(flight_Info));
+                        Console.WriteLine("\n--------------------------------------------------------------------");
+                        Console.WriteLine(flightInfoList[0].flights[0].flightNumber);
                     }
                 } 
             }

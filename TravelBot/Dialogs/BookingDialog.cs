@@ -24,6 +24,7 @@ using System.Reflection.Metadata.Ecma335;
 using System.Text.RegularExpressions;
 using System.Globalization;
 using Microsoft.IdentityModel.Tokens;
+using System.Runtime.ConstrainedExecution;
 
 
 namespace TravelBot.Dialogs
@@ -38,12 +39,15 @@ namespace TravelBot.Dialogs
         private const string PassengersMsgText = "Quanti passeggeri?";
         private const string BudgetMsgText = "Qual è il tuo budget?";
 
-        //private List<string> flightOptions;
+        
         private List<FlightInfo> flightOptions;
         private int selectedIndex;
         private string originIATA;
         private string destinationIATA;
-        private bool isFake = false;
+        private bool isFake = true;
+
+        private IataInfo iataInfos;
+        private BookingDetails bookingDetails;
 
         public BookingDialog()
             : base(nameof(BookingDialog))
@@ -51,20 +55,14 @@ namespace TravelBot.Dialogs
             AddDialog(new TextPrompt(nameof(TextPrompt), TextPromptValidatorAsync));
             AddDialog(new ChoicePrompt(nameof(ChoicePrompt)));
             AddDialog(new DateResolverDialog());
+            AddDialog(new CityDialogResolver());
             AddDialog(new TextPrompt("emailPrompt", ValidateEmailAsync));
             AddDialog(new TextPrompt("departureDatePrompt", DatePromptValidatorAsync));
             AddDialog(new TextPrompt("returnDatePrompt", DatePromptValidatorAsync));
             AddDialog(new TextPrompt("cardPrompt"));
             AddDialog(new WaterfallDialog(nameof(WaterfallDialog), new WaterfallStep[]
             {
-                DestinationStepAsync,
-                OriginStepAsync,
-                TravelDateStepAsync,
-                ReturnDateStepAsync,
-                PassengersStepAsync,
-                ConfirmStepAsync,
-                FinalStepAsync,
-                HandleResultStepAsync,
+                InitialStepAsync,
                 APIStepAsync,
                 ShowFlightsAsync,
                 ShowSelectedFlightAsync,
@@ -73,233 +71,97 @@ namespace TravelBot.Dialogs
 
             // The initial child Dialog to run.
             InitialDialogId = nameof(WaterfallDialog);
+            bookingDetails= new BookingDetails();
         }
 
-        private async Task<DialogTurnResult> DestinationStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+        private async Task<DialogTurnResult> InitialStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             var bookingDetails = (BookingDetails)stepContext.Options;
-            
+            this.bookingDetails= bookingDetails;
 
-            if (bookingDetails.Destination == null || !CheckCity(bookingDetails.Destination))
-            {
-              
-                var promptMessage = MessageFactory.Text(DestinationStepMsgText, DestinationStepMsgText, InputHints.ExpectingInput);
-                var repromptMessage = MessageFactory.Text(RepromptMsgText, RepromptMsgText, InputHints.ExpectingInput);
-
-                
-                return await stepContext.PromptAsync(nameof(TextPrompt),
-                   new PromptOptions
-                   {
-                       Prompt = promptMessage,
-                       RetryPrompt = repromptMessage,
-                   }, cancellationToken);
-
-            }
-            
-
-            return await stepContext.NextAsync(bookingDetails.Destination, cancellationToken);
+            return await stepContext.BeginDialogAsync(nameof(CityDialogResolver),bookingDetails, cancellationToken);
         }
-
-        private async Task<DialogTurnResult> OriginStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+       
+        private async Task<DialogTurnResult> APIStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
+            
         {
-            var bookingDetails = (BookingDetails)stepContext.Options;
-
-            bookingDetails.Destination = (string)stepContext.Result;
-
-            if (bookingDetails.Origin == null || !CheckCity(bookingDetails.Origin))
+            //var bookingDetails = (BookingDetails)stepContext.Options;
             
-            {
-                var promptMessage = MessageFactory.Text(OriginStepMsgText, OriginStepMsgText, InputHints.ExpectingInput);
-                return await stepContext.PromptAsync(nameof(TextPrompt), new PromptOptions { Prompt = promptMessage }, cancellationToken);
-            }
+            CityDialogResult cityDialogResult = (CityDialogResult)stepContext.Result;
 
-            return await stepContext.NextAsync(bookingDetails.Origin, cancellationToken);
-        }
+            await stepContext.Context.SendActivityAsync($" cityDialog prompt value: {cityDialogResult.promtResult}");
+            this.bookingDetails = cityDialogResult.bookingDetails;
 
-        private async Task<DialogTurnResult> TravelDateStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        {
-            var bookingDetails = (BookingDetails)stepContext.Options;
-
-            DateAndTimeConverter converter = new DateAndTimeConverter();
-            
-
-            bookingDetails.Origin = (string)stepContext.Result;
-
-            if (bookingDetails.TravelDate == null || converter.WordToDate(bookingDetails.TravelDate)==null)
-            {
-                // return await stepContext.BeginDialogAsync(nameof(DateResolverDialog), bookingDetails.TravelDate, cancellationToken);
-                //return await stepContext.PromptAsync("departureDatePrompt", new PromptOptions { Prompt = MessageFactory.Text("Quando vuoi partire? "), RetryPrompt = MessageFactory.Text("La data inserita non è valida, per favore inseriscila di nuovo.") }, cancellationToken);
-                BookingConverter bookingConverter = new BookingConverter
-                {
-                    Date = bookingDetails.TravelDate,
-                    PromptType = "D"
-                };
-
-                return await stepContext.BeginDialogAsync(nameof(DateResolverDialog), bookingConverter, cancellationToken);
-            }
-            
-            bookingDetails.TravelDate=converter.WordToDate(bookingDetails.TravelDate);
+            await stepContext.Context.SendActivityAsync($"Bookin Origin di dopo cityDialog: {bookingDetails.Origin}");
+            await stepContext.Context.SendActivityAsync($"Bookin travel date di dopo cityDialog: {bookingDetails.TravelDate}");
+            var result = cityDialogResult.promtResult;
+            this.iataInfos = cityDialogResult.iataInfo;
+            this.isFake = cityDialogResult.isFake;
+           // var bookingDetails = (BookingDetails)stepContext.Result;
            
 
-            return await stepContext.NextAsync(bookingDetails.TravelDate, cancellationToken);
-        }
+            DateAndTimeConverter dateAndTimeConverter = new DateAndTimeConverter();
+            //I voli da qualsiasi aeroporto dell'origin verso qualsiasi aeroporto della destination
 
-        private async Task<DialogTurnResult> ReturnDateStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        {
-            var bookingDetails = (BookingDetails)stepContext.Options;
-            bookingDetails.TravelDate = (string)stepContext.Result;
-            
-            DateAndTimeConverter converter = new DateAndTimeConverter();
-            bookingDetails.TravelDate = converter.WordToDate(bookingDetails.TravelDate);
-
-            if (bookingDetails.ReturnDate!=null && converter.WordToDate(bookingDetails.ReturnDate)==null)
+            if (this.iataInfos.allAirportsOrigin && this.iataInfos.allAirportsDestination)
             {
-                BookingConverter bookingConverter = new BookingConverter
+                await stepContext.Context.SendActivityAsync($"IF OVUNQUE");
+
+                foreach (var originIata in this.iataInfos.IATAlistOrigin)
                 {
-                    Date = bookingDetails.ReturnDate,
-                    PromptType = "R"
-                };
-
-                 return await stepContext.BeginDialogAsync(nameof(DateResolverDialog), bookingConverter, cancellationToken);
-            }
-
-            bookingDetails.ReturnDate = converter.WordToDate(bookingDetails.ReturnDate);
-            return await stepContext.NextAsync(bookingDetails.ReturnDate, cancellationToken);
-        }
-
-        private async Task<DialogTurnResult> PassengersStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        {
-            var bookingDetails = (BookingDetails)stepContext.Options;
-            bookingDetails.ReturnDate = (string)stepContext.Result;
-            DateAndTimeConverter converter = new DateAndTimeConverter();
-            bookingDetails.ReturnDate = converter.WordToDate(bookingDetails.ReturnDate);
-
-            if (bookingDetails.PassengersNumber != null)
-            {
-                WordNumberConverter wordNumberConverter = new WordNumberConverter();
-                bookingDetails.PassengersNumber= wordNumberConverter.ConvertToNumbers(bookingDetails.PassengersNumber);
-            }
-            else 
-            {
-                bookingDetails.PassengersNumber = "1";
-            }
-            
-
-            return await stepContext.NextAsync(bookingDetails.PassengersNumber, cancellationToken);
-        }
-
-        private async Task<DialogTurnResult> ConfirmStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        {
-            var bookingDetails = (BookingDetails)stepContext.Options;
-
-            bookingDetails.PassengersNumber = (string)stepContext.Result;
-
-
-            var messageText = $"Perfavore conferma, vuoi andare a: {bookingDetails.Destination} da: {bookingDetails.Origin} il: {bookingDetails.TravelDate} {(bookingDetails.ReturnDate != null ? $" Ritorno il: {bookingDetails.ReturnDate}" : "")}, numero passeggeri: {bookingDetails.PassengersNumber} {(bookingDetails.Budget != null ? $", budget: {bookingDetails.Budget}€" : "")}. E' corretto?";
-            //var promptMessage = MessageFactory.Text(messageText, messageText, InputHints.ExpectingInput);
-            var promptOptions = new PromptOptions
-            {
-                Prompt = MessageFactory.Text(messageText, messageText, InputHints.ExpectingInput),
-                RetryPrompt = MessageFactory.Text("Per favore, seleziona un'opzione valida."),
-                Choices = new List<Choice>
+                    foreach(var destIata in this.iataInfos.IATAlistDestination)
                     {
-                        new Choice("Si"),
-                        new Choice("No"),
-                        new Choice("Ricerca Fake")
-                    },
-                Style = ListStyle.Auto, // Puoi personalizzare lo stile dei pulsanti se necessario
-            };
+                        //SearchFlights searchFlights = new SearchFlights(originIata, destIata, dateAndTimeConverter.ItalianToEnUs(bookingDetails.TravelDate), (bookingDetails.ReturnDate != null ? dateAndTimeConverter.ItalianToEnUs(bookingDetails.ReturnDate) : null), int.Parse(bookingDetails.PassengersNumber), (bookingDetails.Budget != null ? double.Parse(bookingDetails.Budget) : double.Parse("0")));
+                    }
 
-            return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
-        }
-
-       
-
-        private async Task<DialogTurnResult> FinalStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        {
-
-            var result = (FoundChoice)stepContext.Result;
-            var bookingDetails = (BookingDetails)stepContext.Options;
-
-            WordNumberConverter wordNumber = new WordNumberConverter();
-            if (bookingDetails.Budget == null)
+                }
+            }else if (this.iataInfos.allAirportsOrigin)
             {
-                bookingDetails.Budget = "0";
+                await stepContext.Context.SendActivityAsync($"IF TUTTi GLI AEROPORTI DI ORIGINE");
+                this.destinationIATA = this.iataInfos.IATAlistDestination[this.iataInfos.destinationIATAIndex];
+
+                await stepContext.Context.SendActivityAsync($"IF TUTTi GLI AEROPORTI DI ORIGINE  DESTINATION IATA ARRIVATA FINO A QUI: {this.destinationIATA}");
+                foreach (var originIata in this.iataInfos.IATAlistOrigin)
+                {
+                    //SearchFlights searchFlights = new SearchFlights(originIata,  this.destinationIATA, dateAndTimeConverter.ItalianToEnUs(bookingDetails.TravelDate), (bookingDetails.ReturnDate != null ? dateAndTimeConverter.ItalianToEnUs(bookingDetails.ReturnDate) : null), int.Parse(bookingDetails.PassengersNumber), (bookingDetails.Budget != null ? double.Parse(bookingDetails.Budget) : double.Parse("0")));
+                }
+            }
+            else if (this.iataInfos.allAirportsDestination)
+            {
+                await stepContext.Context.SendActivityAsync($"IF TUTTi GLI AEROPORTI DI DESTINAZIONE");
+
+                this.originIATA = this.iataInfos.IATAlistOrigin[this.iataInfos.originIATAIndex];
+                foreach (var originIata in this.iataInfos.IATAlistOrigin)
+                {
+                    //SearchFlights searchFlights = new SearchFlights(originIata,  this.destinationIATA, dateAndTimeConverter.ItalianToEnUs(bookingDetails.TravelDate), (bookingDetails.ReturnDate != null ? dateAndTimeConverter.ItalianToEnUs(bookingDetails.ReturnDate) : null), int.Parse(bookingDetails.PassengersNumber), (bookingDetails.Budget != null ? double.Parse(bookingDetails.Budget) : double.Parse("0")));
+                }
             }
             else
             {
-                bookingDetails.Budget = wordNumber.NumberExtractor(bookingDetails.Budget);
+                await stepContext.Context.SendActivityAsync($"ULTIMO CASO ENTAMBI AEROPORTI SELEZIOANTI O AVENTI UN SOLO AEROPORTO");
+                this.originIATA = this.iataInfos.IATAlistOrigin[this.iataInfos.originIATAIndex];
+                this.destinationIATA = this.iataInfos.IATAlistDestination[this.iataInfos.destinationIATAIndex];
+
+                await stepContext.Context.SendActivityAsync($" Cerco voli da {this.originIATA} a {this.destinationIATA} per finta (cerco sempre il primo iata");
             }
 
-            if (result.Value=="Ricerca Fake")
-            {
-                this.isFake = true;
-                return await stepContext.NextAsync(bookingDetails, cancellationToken);
-            }
-            
-            if (result.Value == "Si")
-            {
-                this.isFake = false;
-
-                return await stepContext.NextAsync(bookingDetails, cancellationToken);
-            }
-            else if (result.Value == "No")
-            {
-
-               
-                var changeCard = CreateDynamicCardAttachment(bookingDetails.Origin,bookingDetails.Destination,bookingDetails.TravelDate,bookingDetails.ReturnDate,bookingDetails.PassengersNumber,bookingDetails.Budget);
-                var response = MessageFactory.Attachment(changeCard, ssml: "Cambio");
-                await stepContext.Context.SendActivityAsync(response, cancellationToken).ConfigureAwait(false);
-
-
-                return await stepContext.PromptAsync("cardPrompt", new PromptOptions { Prompt = MessageFactory.Text("In attessa di conferma... ") });
-
-            }
-
-            return await stepContext.EndDialogAsync(null, cancellationToken);
-        }
-
-        private async Task<DialogTurnResult> HandleResultStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-        {
-            if (stepContext.Result is BookingDetails result)
-            {
-  
-                var bookingDetails = (BookingDetails)stepContext.Result;
-                return await stepContext.NextAsync(bookingDetails, cancellationToken);
-                
-            }
-            else 
-            {
-                
-                var bookingString = (string)stepContext.Result;
-                BookingConverter converter = new BookingConverter();
-                BookingDetails bookingDetails = converter.ParseFromString(bookingString);
-
-                return await stepContext.NextAsync(bookingDetails, cancellationToken);
-            }
-
-            
-        }
-
-
-            private async Task<DialogTurnResult> APIStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
-            {
-
-            var bookingDetails = (BookingDetails)stepContext.Result;
-            DateAndTimeConverter dateAndTimeConverter = new DateAndTimeConverter();
-            this.originIATA = GetIATACode(bookingDetails.Origin);
-            this.destinationIATA = GetIATACode(bookingDetails.Destination);
+            //LOGICA PER TEST
+            this.originIATA = GetIATACode(this.bookingDetails.Origin);
+            this.destinationIATA = GetIATACode(this.bookingDetails.Destination);
 
             //API VIAGGI
-            SearchFlights searchFlights = new SearchFlights(originIATA, destinationIATA, dateAndTimeConverter.ItalianToEnUs(bookingDetails.TravelDate), (bookingDetails.ReturnDate != null ? dateAndTimeConverter.ItalianToEnUs(bookingDetails.ReturnDate) : null), int.Parse(bookingDetails.PassengersNumber), (bookingDetails.Budget != null ? double.Parse(bookingDetails.Budget) : double.Parse("0")));
+            SearchFlights searchFlights = new SearchFlights(originIATA, destinationIATA, dateAndTimeConverter.ItalianToEnUs(this.bookingDetails.TravelDate), (this.bookingDetails.ReturnDate != null ? dateAndTimeConverter.ItalianToEnUs(this.bookingDetails.ReturnDate) : null), int.Parse(this.bookingDetails.PassengersNumber), (this.bookingDetails.Budget != null ? double.Parse(this.bookingDetails.Budget) : double.Parse("0")));
 
             if (this.isFake)
             {
+                await stepContext.Context.SendActivityAsync($" GetRandomFlights");
                 this.flightOptions = GetRandomFlights();
             }
             else
             {
+
                 this.flightOptions = searchFlights.StartSearch();
+                await stepContext.Context.SendActivityAsync($"Numero voli: {this.flightOptions.Count}");
             }
             
             if (this.flightOptions.IsNullOrEmpty() ) {
@@ -307,19 +169,22 @@ namespace TravelBot.Dialogs
                 return await stepContext.EndDialogAsync(null, cancellationToken);
             }
 
-            return await stepContext.NextAsync(searchFlights.passengers.ToString(), cancellationToken);
+            //return await stepContext.NextAsync(searchFlights.passengers.ToString(), cancellationToken);
+            return await stepContext.NextAsync(this.bookingDetails, cancellationToken);
         }
 
         private async Task<DialogTurnResult> ShowFlightsAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
-            string passengersNumber= (string)stepContext.Result;
             
+            var bookingDetails = (BookingDetails)stepContext.Result;
+
+
             // Lista di Adaptive Cards per le tratte
             var cards = new List<Attachment>();
             foreach (var option in this.flightOptions)
             {
 
-                var travelCard = CreateTravelDetailsAdaptiveCard(option, passengersNumber);
+                var travelCard = CreateTravelDetailsAdaptiveCard(option, bookingDetails.PassengersNumber);
                 cards.Add(travelCard);
             }
 
@@ -397,9 +262,12 @@ namespace TravelBot.Dialogs
 
             // Salva l'email inserita dall'utente
             var userEmail = (string)stepContext.Result;
-            var bookingDetails = (BookingDetails)stepContext.Options;
-          
-            if (!SaveDemand(userEmail, bookingDetails))
+            
+
+            await stepContext.Context.SendActivityAsync($"booking Details date: {this.bookingDetails.TravelDate} ");
+
+
+            if (!SaveDemand(userEmail, this.bookingDetails))
             {
                 await stepContext.Context.SendActivityAsync($"Reminder non salvato ", cancellationToken: cancellationToken);
                 return await stepContext.EndDialogAsync(null, cancellationToken);
@@ -537,7 +405,14 @@ namespace TravelBot.Dialogs
         {
             AirportRepository airportRepository = new AirportRepository();
             
-            return airportRepository.GetIataCodeByCity(city)[0];
+            return airportRepository.GetIataContainedInValue(city);
+        }
+
+        private List<string> GetListIATACode(string city)
+        {
+            AirportRepository airportRepository = new AirportRepository();
+
+            return airportRepository.GetIataCodeByCity(city);
         }
 
         private async Task<bool> DatePromptValidatorAsync(PromptValidatorContext<string> promptContext, CancellationToken cancellationToken)
@@ -622,6 +497,42 @@ namespace TravelBot.Dialogs
             }
 
             return choices;
+        }
+
+
+        private IList<Choice> GetIataChoices(List<string> options, string city)
+        {
+            var choices = new List<Choice>();
+
+            for (int i = 0; i < options.Count; i++)
+            {
+                string val = city +" "+ options[i];
+                choices.Add(new Choice
+                {
+                    Value = val,
+                    Action = new CardAction(ActionTypes.ImBack, title: $" {val}", value: val)
+                });
+            }
+
+            return choices;
+        }
+
+        private PromptOptions GetIataPromptOptions(List<string> options, string city)
+        {
+            var promptOptions = new PromptOptions
+            {
+                Prompt = MessageFactory.Text("Questa città ha più di un aeroporto, scegliene uno oppure clicca sul nome della città per ricercare ovunque"),
+                Choices = GetIataChoices(options, city)
+            };
+
+
+            promptOptions.Choices.Add(new Choice
+            {
+                Value = city,
+                Action = new CardAction(ActionTypes.ImBack, title: city, value: city)
+            });
+
+            return promptOptions;
         }
 
 
