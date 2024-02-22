@@ -9,6 +9,7 @@ This feature periodically checks (Friday at 7pm) the price of flights saved by u
 | DATABASE SQL | A simple DB to store all the City and Airport known, and to save client's demand  |
 | STORAGE ACCOUNT - CONTAINER - BLOB | Storing files for distributed access, (images,html, json)  |
 | AZURE COMUNICATION SERVICE | Which will allow you to send emails |
+| AZURE EMAIL COMUNICATION SERVICE | Which will allow to add Domain Name |
 | AZURE FUNCTION| Used to run time trigger logic |
 
 
