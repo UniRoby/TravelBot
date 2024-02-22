@@ -85,7 +85,7 @@ namespace TravelBot.Repository
             try
             {
                 result = (from a in Context.Airports
-                          where a.CityIt.ToLower() == city || city.Contains(a.IataCode.ToLower())
+                          where a.CityIt.ToLower() == city || TrovaPossibiliIATA(city).Contains(a.IataCode.ToLower())
                           select a.CityIt
                                 ).FirstOrDefault();
 
@@ -103,6 +103,23 @@ namespace TravelBot.Repository
             {
                 return true;
             }
+        }
+
+      
+        private List<string> TrovaPossibiliIATA(string input)
+        {
+            List<string> sottostringhe = new List<string>();
+            string[] parole = input.Split(' ');
+
+            foreach (string parola in parole)
+            {
+                if (parola.Length == 3)
+                {
+                    sottostringhe.Add(parola);
+                }
+            }
+
+            return sottostringhe;
         }
 
     }

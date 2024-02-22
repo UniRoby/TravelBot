@@ -43,7 +43,7 @@ namespace TravelBot.Dialogs
         private IataInfo iataInfo;
         private bool alreadyContainsOrigin = false;
         private bool alreadyContainsDestination = false;
-
+        private BookingConverter bookingConverter = new BookingConverter();
         public CityDialogResolver()
             : base(nameof(CityDialogResolver))
         {
@@ -76,11 +76,11 @@ namespace TravelBot.Dialogs
         private async Task<DialogTurnResult> DestinationStepAsync(WaterfallStepContext stepContext, CancellationToken cancellationToken)
         {
             var bookingDetails = (BookingDetails)stepContext.Options;
-
-           
+            
+            bookingDetails.Destination=this.bookingConverter.RimuoviPreposizioni(bookingDetails.Destination);
 
             await stepContext.Context.SendActivityAsync($"Destinazione: {bookingDetails.Destination}, Partenza: {bookingDetails.Origin}");
-
+           
             if (bookingDetails.Destination == null || !CheckCity(bookingDetails.Destination))
             {
               
@@ -105,6 +105,7 @@ namespace TravelBot.Dialogs
         {
             var bookingDetails = (BookingDetails)stepContext.Options;
             bookingDetails.Destination = (string)stepContext.Result;
+            bookingDetails.Destination = this.bookingConverter.RimuoviPreposizioni(bookingDetails.Destination);
 
             var city = ExtractCity(bookingDetails.Destination);
             this.iataInfo.IATAlistDestination = GetListIATACode(city);
@@ -175,7 +176,9 @@ namespace TravelBot.Dialogs
             var bookingDetails = (BookingDetails)stepContext.Options;
 
             bookingDetails.Destination = (string)stepContext.Result;
+            bookingDetails.Destination = this.bookingConverter.RimuoviPreposizioni(bookingDetails.Destination);
 
+            bookingDetails.Origin = this.bookingConverter.RimuoviPreposizioni(bookingDetails.Origin);
 
             if (bookingDetails.Origin == null || !CheckCity(bookingDetails.Origin))
             
@@ -191,6 +194,7 @@ namespace TravelBot.Dialogs
         {
             var bookingDetails = (BookingDetails)stepContext.Options;
             bookingDetails.Origin = (string)stepContext.Result;
+            bookingDetails.Origin = this.bookingConverter.RimuoviPreposizioni(bookingDetails.Origin);
 
             this.iataInfo.IATAlistOrigin = GetListIATACode(bookingDetails.Origin);
 
@@ -252,6 +256,7 @@ namespace TravelBot.Dialogs
             
 
             bookingDetails.Origin = (string)stepContext.Result;
+             bookingDetails.Origin = this.bookingConverter.RimuoviPreposizioni(bookingDetails.Origin);
 
             if (bookingDetails.TravelDate == null || converter.WordToDate(bookingDetails.TravelDate)==null)
             {
@@ -477,6 +482,7 @@ namespace TravelBot.Dialogs
         {
             AirportRepository airportRepository = new AirportRepository();
 
+            city=this.bookingConverter.RimuoviPreposizioni(city);
             return airportRepository.CityExists(city);
         }
 
@@ -518,12 +524,19 @@ namespace TravelBot.Dialogs
 
         private async Task<bool> TextPromptValidatorAsync(PromptValidatorContext<string> promptContext, CancellationToken cancellationToken)
         {
+            
+            
             if (CheckCity(promptContext.Context.Activity.Text))
             {
+                Console.WriteLine("TRUE");
                 return await Task.FromResult(true);
             }
             else
+            {
+                Console.WriteLine("FALSE");
                 return await Task.FromResult(false);
+            }
+               
         }
 
 

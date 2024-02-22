@@ -84,6 +84,22 @@ namespace TravelBot.Utils
             return index;
         }
 
+        public string RimuoviPreposizioni(string input)
+        {
+           if(input == null)
+                return null;
+            // Lista delle preposizioni da rimuovere
+            string[] preposizioni = { "per", "da", "a" };
+
+            // Dividi la stringa in parole
+            string[] parole = input.Split(' ');
+
+            // Rimuovi le preposizioni e riunisci le parole
+            string risultato = string.Join(" ", parole.Where(parola => !preposizioni.Contains(parola)));
+
+            return risultato;
+        }
+
     }
 }
 
