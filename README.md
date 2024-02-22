@@ -61,6 +61,7 @@ To host your bot's logic, you can either customize Bot Builder samples to fit yo
 -RunTime stack: .NET Core 7.0 LTS
 -Operating system: Windows
 -Region: West Europe
+-enable Application Insights
 
 #Deploy TravelBot Code to TravelBotAppCloud
 1 - In Visual Studio, in Solution Explorer, right-click the TravelBot project and select Publish
