@@ -1,7 +1,7 @@
 # TimeTriggerEmail/Check Price
 
 Azure Function linked to TravelBot.
-This feature periodically checks (Friday at 7pm) the price of flights saved by users in order to send a notification/email if there is a price change.
+This function periodically checks (Friday at 7pm) the price of flights saved by users in order to send a notification/email if there is a price change.
 
 | Service/Resource | Description |
 | ---------- | -------- | 
