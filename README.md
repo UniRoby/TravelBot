@@ -28,16 +28,16 @@ All the Service and Resources are in the same Resources Group
 ## Deployment Steps
 
  ## Create Visual Studio Project
-     - Set the CRON to send emails at 7pm every Friday : 00 19 * * 5
-##Publish Solution
-On Visual Studio:
--Right Click on the solution name
--Publish
--Select Azure
--Select Azure Function App (Windows)
--Create New Function App: (TimeTriggerEmail20240210221352), Fill all the input of the form
--Select Finish and click on Pulish button
--Insert all the secrets in the configuration settings
+     Set the CRON to send emails at 7pm every Friday : 00 19 * * 5
+ ## Publish Solution
+ On Visual Studio:
+ -Right Click on the solution name
+ -Publish
+ -Select Azure
+ -Select Azure Function App (Windows)
+ -Create New Function App: (TimeTriggerEmail20240210221352), Fill all the input of the form
+ -Select Finish and click on Pulish button
+ -Insert all the secrets in the configuration settings
 
 
 # DEMO
