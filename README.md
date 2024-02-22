@@ -27,9 +27,9 @@ All the Service and Resources are in the same Resources Group
 
 ## Deployment Steps
 
- ## Create Visual Studio Project
+ ### Create Visual Studio Project
      Set the CRON to send emails at 7pm every Friday : 00 19 * * 5
- ## Publish Solution
+ ### Publish Solution
  On Visual Studio:
   - Right Click on the solution name
   - Publish
