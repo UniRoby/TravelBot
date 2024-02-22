@@ -40,7 +40,7 @@ On Visual Studio:
 -Insert all the secrets in the configuration settings
 
 
-###DEMO
+# DEMO
 ![demoEmail2](https://github.com/UniRoby/TravelBot/assets/107865801/97ccb878-9f54-40f0-b6bc-f282bfa13056)
 
 ![demoEmail](https://github.com/UniRoby/TravelBot/assets/107865801/80934ea0-7277-4b3a-a754-30ed74160999)
