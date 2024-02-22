@@ -9,7 +9,10 @@ This is a project for The Cloud Computing Exam usign the Azure's services.
 | SERVER SQL | SQL Server installed and hosted in the cloud runs in Windows Server virtual machines |
 | DATABASE SQL | A simple DB to store all the City and Airport known, and to save client's demand  |
 | STORAGE ACCOUNT - CONTAINER - BLOB | Storing files for distributed access, (images,html, json)  |
-| BOT | Which will allow you to register your bot with the Azure AI Bot Service |
+| Azure BOT | Which will allow you to register your bot with the Azure AI Bot Service |
+| Managed Identity | Used for the Azure BOT |
+| AZURE APP SERVICE | Which will allow you to manage the bot logic |
+| AZURE APP SERVICE PLAN | Used for Web App |
 
 # TRAVEL BOT 
 All the Service and Resources are in the same Resources Group
