@@ -9,8 +9,8 @@ This is a project for educational purposes. The project documentation is in the 
 
 
 
-##FLIGHTS API 
+# FLIGHTS API 
 Read the SearpApi Official Documentation: https://serpapi.com/google-flights-api
 
-##Architecture
+# Architecture
 <img width="640" alt="image" src="https://github.com/UniRoby/TravelBot/assets/107865801/7347f84a-d707-44b0-89a4-4be21fa7ed30">
