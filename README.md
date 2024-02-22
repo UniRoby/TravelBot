@@ -12,7 +12,9 @@ This feature periodically checks (Friday at 7pm) the price of flights saved by u
 | AZURE EMAIL COMUNICATION SERVICE | Which will allow to add Domain Name |
 | AZURE FUNCTION| Used to run time trigger logic |
 
-![image](https://github.com/UniRoby/TravelBot/assets/107865801/6e48eba4-c708-4437-b86d-50c1147b7b27)
+# Architecture
+<img width="400" alt="image" src="https://github.com/UniRoby/TravelBot/assets/107865801/6bcdb11e-e921-4b4c-9a10-99d83c5f2c19">
+
 
 
 All the Service and Resources are in the same Resources Group
