@@ -5,4 +5,9 @@ What are you waiting for, find your next destination! 🛫🏯🗼🗽🏝🏜�
 ![alt text](https://storageaccountprojcloud.blob.core.windows.net/container-progetto-cloud/EmailLogo.png?sp=r&st=2024-02-02T18:26:22Z&se=2024-08-31T22:00:00Z&spr=https&sv=2022-11-02&sr=c&sig=xv6vvVpt901525Ld6IWdEFz7dXaR%2Fz%2BaHA%2F3kdhoI6A%3D)
 
 This is a project for educational purposes. The project documentation is in the respective branches.
-![image](https://github.com/UniRoby/TravelBot/assets/107865801/238562d0-b0ad-457d-ba71-212838b4073d)
+
+<img width="640" alt="image" src="https://github.com/UniRoby/TravelBot/assets/107865801/7347f84a-d707-44b0-89a4-4be21fa7ed30">
+
+###FLIGHTS API 
+Read the SearpApi Official Documentation: https://serpapi.com/google-flights-api
+
