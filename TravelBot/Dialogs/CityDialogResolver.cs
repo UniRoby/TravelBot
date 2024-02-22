@@ -79,7 +79,7 @@ namespace TravelBot.Dialogs
             
             bookingDetails.Destination=this.bookingConverter.RimuoviPreposizioni(bookingDetails.Destination);
 
-            await stepContext.Context.SendActivityAsync($"Destinazione: {bookingDetails.Destination}, Partenza: {bookingDetails.Origin}");
+            //await stepContext.Context.SendActivityAsync($"Destinazione: {bookingDetails.Destination}, Partenza: {bookingDetails.Origin}");
            
             if (bookingDetails.Destination == null || !CheckCity(bookingDetails.Destination))
             {
@@ -106,22 +106,26 @@ namespace TravelBot.Dialogs
             var bookingDetails = (BookingDetails)stepContext.Options;
             bookingDetails.Destination = (string)stepContext.Result;
             bookingDetails.Destination = this.bookingConverter.RimuoviPreposizioni(bookingDetails.Destination);
+            //await stepContext.Context.SendActivityAsync($"Destinazione: {bookingDetails.Destination}");
 
             var city = ExtractCity(bookingDetails.Destination);
+            // await stepContext.Context.SendActivityAsync($"città estratta : {city}");
+
             this.iataInfo.IATAlistDestination = GetListIATACode(city);
 
-            await stepContext.Context.SendActivityAsync($"Destinazione: {bookingDetails.Destination}");
+            //  this.iataInfo.IATAlistDestination.ForEach(e=> stepContext.Context.SendActivityAsync($" {e}"));
 
             BookingConverter bookingConverter = new BookingConverter();
 
             this.alreadyContainsDestination = bookingConverter.ContainsIATA(bookingDetails.Destination, this.iataInfo.IATAlistDestination);
+            //await stepContext.Context.SendActivityAsync($"Contiene IATA?: {this.alreadyContainsDestination}");
 
-            if(this.alreadyContainsDestination)
+            if (this.alreadyContainsDestination)
             {
-                await stepContext.Context.SendActivityAsync($"ContainsIATA: {bookingDetails.Destination}");
+                // await stepContext.Context.SendActivityAsync($"ContainsIATA: {bookingDetails.Destination}");
                 this.iataInfo.destinationIATAIndex=bookingConverter.GetContainedIATA(bookingDetails.Destination, this.iataInfo.IATAlistDestination);
                 this.iataInfo.allAirportsDestination = false;
-                await stepContext.Context.SendActivityAsync($"IATA ottenuto: {this.iataInfo.IATAlistDestination[this.iataInfo.destinationIATAIndex]}");
+                // await stepContext.Context.SendActivityAsync($"IATA ottenuto: {this.iataInfo.IATAlistDestination[this.iataInfo.destinationIATAIndex]}");
             }
             else if (this.iataInfo.IATAlistDestination.Count >1)
             {
@@ -153,8 +157,8 @@ namespace TravelBot.Dialogs
                else{
                     this.iataInfo.destinationIATAIndex = choice.Index;
                     this.iataInfo.allAirportsDestination = false;
-                    
-                    await stepContext.Context.SendActivityAsync($"Aeroporto scelto: {this.iataInfo.IATAlistDestination[this.iataInfo.destinationIATAIndex]}");
+
+                    // await stepContext.Context.SendActivityAsync($"Aeroporto scelto: {this.iataInfo.IATAlistDestination[this.iataInfo.destinationIATAIndex]}");
                     return await stepContext.NextAsync(bookingDetails.Destination, cancellationToken);
                 }
 
@@ -163,7 +167,8 @@ namespace TravelBot.Dialogs
             {
                
                 bookingDetails.Destination = (string)stepContext.Result;
-                await stepContext.Context.SendActivityAsync($"FLUSSO DI NON SCELTA PERCHE' PREVENTIVAMENTE OTTENUTO: {bookingDetails.Destination}");
+                this.iataInfo.allAirportsDestination = false;
+                //await stepContext.Context.SendActivityAsync($"FLUSSO DI NON SCELTA PERCHE' PREVENTIVAMENTE OTTENUTO: {bookingDetails.Destination}");
                 return await stepContext.NextAsync(bookingDetails.Destination, cancellationToken);
             }
 
@@ -196,9 +201,28 @@ namespace TravelBot.Dialogs
             bookingDetails.Origin = (string)stepContext.Result;
             bookingDetails.Origin = this.bookingConverter.RimuoviPreposizioni(bookingDetails.Origin);
 
-            this.iataInfo.IATAlistOrigin = GetListIATACode(bookingDetails.Origin);
+            //await stepContext.Context.SendActivityAsync($"Destinazione: {bookingDetails.Destination}, Partenza: {bookingDetails.Origin}");
 
-            if (this.iataInfo.IATAlistOrigin.Count > 1)
+            var city = ExtractCity(bookingDetails.Origin);
+            // await stepContext.Context.SendActivityAsync($"città estratta : {city}");
+
+            this.iataInfo.IATAlistOrigin = GetListIATACode(city);
+
+            // this.iataInfo.IATAlistOrigin.ForEach(e => stepContext.Context.SendActivityAsync($" {e}"));
+
+            BookingConverter bookingConverter = new BookingConverter();
+
+            this.alreadyContainsOrigin = bookingConverter.ContainsIATA(bookingDetails.Origin, this.iataInfo.IATAlistOrigin);
+            // await stepContext.Context.SendActivityAsync($"Contiene IATA?: {this.alreadyContainsOrigin}");
+
+            if (this.alreadyContainsOrigin)
+            {
+                //  await stepContext.Context.SendActivityAsync($"ContainsIATA: {bookingDetails.Origin}");
+                this.iataInfo.originIATAIndex = bookingConverter.GetContainedIATA(bookingDetails.Origin, this.iataInfo.IATAlistOrigin);
+                this.iataInfo.allAirportsOrigin = false;
+                // await stepContext.Context.SendActivityAsync($"IATA ottenuto: {this.iataInfo.IATAlistOrigin[this.iataInfo.originIATAIndex]}");
+            }
+            else if (this.iataInfo.IATAlistOrigin.Count > 1)
             {
                 var promptOptions = GetIataPromptOptions(this.iataInfo.IATAlistOrigin, bookingDetails.Origin);
                 return await stepContext.PromptAsync(nameof(ChoicePrompt), promptOptions, cancellationToken);
@@ -216,10 +240,7 @@ namespace TravelBot.Dialogs
             if (stepContext.Result is FoundChoice result)
             {
 
-
                 var choice = (FoundChoice)stepContext.Result;
-
-              
 
                 if (choice.Value == bookingDetails.Origin)
                 {
@@ -232,8 +253,8 @@ namespace TravelBot.Dialogs
                 {
                     this.iataInfo.originIATAIndex = choice.Index;
                     this.iataInfo.allAirportsOrigin = false;
-                 
-                    await stepContext.Context.SendActivityAsync($"Aeroporto scelto: {this.iataInfo.IATAlistOrigin[this.iataInfo.originIATAIndex]}");
+
+                    // await stepContext.Context.SendActivityAsync($"Aeroporto scelto: {this.iataInfo.IATAlistOrigin[this.iataInfo.originIATAIndex]}");
                     return await stepContext.NextAsync(bookingDetails.Origin, cancellationToken);
                 }
 
@@ -242,6 +263,8 @@ namespace TravelBot.Dialogs
             else
             {
                 bookingDetails.Origin = (string)stepContext.Result;
+                this.iataInfo.allAirportsOrigin = false;
+                //  await stepContext.Context.SendActivityAsync($"FLUSSO DI NON SCELTA PERCHE' PREVENTIVAMENTE OTTENUTO: {bookingDetails.Origin}");
                 return await stepContext.NextAsync(bookingDetails.Origin, cancellationToken);
             }
 
@@ -253,7 +276,7 @@ namespace TravelBot.Dialogs
             var bookingDetails = (BookingDetails)stepContext.Options;
 
             DateAndTimeConverter converter = new DateAndTimeConverter();
-            
+            //  await stepContext.Context.SendActivityAsync($"TravelDateStepAsync");
 
             bookingDetails.Origin = (string)stepContext.Result;
              bookingDetails.Origin = this.bookingConverter.RimuoviPreposizioni(bookingDetails.Origin);
@@ -272,7 +295,7 @@ namespace TravelBot.Dialogs
             
             bookingDetails.TravelDate=converter.WordToDate(bookingDetails.TravelDate);
 
-            await stepContext.Context.SendActivityAsync($"TravelDateStepAsync cityDialog: {bookingDetails.TravelDate}");
+            // await stepContext.Context.SendActivityAsync($"TravelDateStepAsync cityDialog: {bookingDetails.TravelDate}");
 
             return await stepContext.NextAsync(bookingDetails.TravelDate, cancellationToken);
         }
@@ -282,7 +305,7 @@ namespace TravelBot.Dialogs
             var bookingDetails = (BookingDetails)stepContext.Options;
             bookingDetails.TravelDate = (string)stepContext.Result;
 
-            await stepContext.Context.SendActivityAsync($"ReturnDateStepAsync RIsultato travel date cityDialog: {bookingDetails.TravelDate}");
+            // await stepContext.Context.SendActivityAsync($"ReturnDateStepAsync RIsultato travel date cityDialog: {bookingDetails.TravelDate}");
 
             DateAndTimeConverter converter = new DateAndTimeConverter();
             bookingDetails.TravelDate = converter.WordToDate(bookingDetails.TravelDate);
@@ -309,6 +332,8 @@ namespace TravelBot.Dialogs
             DateAndTimeConverter converter = new DateAndTimeConverter();
             bookingDetails.ReturnDate = converter.WordToDate(bookingDetails.ReturnDate);
 
+            // await stepContext.Context.SendActivityAsync($"PassengersStepAsync");
+
             if (bookingDetails.PassengersNumber != null)
             {
                 WordNumberConverter wordNumberConverter = new WordNumberConverter();
@@ -328,12 +353,12 @@ namespace TravelBot.Dialogs
             var bookingDetails = (BookingDetails)stepContext.Options;
 
             bookingDetails.PassengersNumber = (string)stepContext.Result;
-            await stepContext.Context.SendActivityAsync($"ConfirmStepAsync  allAirportsOrigin: {this.iataInfo.allAirportsOrigin}  , allAirportsDestination: {this.iataInfo.allAirportsDestination}");
+            //  await stepContext.Context.SendActivityAsync($"ConfirmStepAsync  allAirportsOrigin: {this.iataInfo.allAirportsOrigin}  , allAirportsDestination: {this.iataInfo.allAirportsDestination}");
 
             var messageText = $"Perfavore conferma, vuoi andare a: " +
                $"{(this.iataInfo.allAirportsDestination || this.alreadyContainsDestination ? $" {bookingDetails.Destination}" : 
-               $" {bookingDetails.Destination} " + this.iataInfo.IATAlistDestination[this.iataInfo.destinationIATAIndex])} " +
-                $"da: {(this.iataInfo.allAirportsOrigin || this.alreadyContainsOrigin ? $" {bookingDetails.Origin}" : 
+               $" {bookingDetails.Destination} " + this.iataInfo.IATAlistDestination[this.iataInfo.destinationIATAIndex])}" +
+                $" da: {(this.iataInfo.allAirportsOrigin || this.alreadyContainsOrigin ? $" {bookingDetails.Origin}" : 
                 $" {bookingDetails.Origin} " + this.iataInfo.IATAlistOrigin[this.iataInfo.originIATAIndex])} " +
                 $"il: {bookingDetails.TravelDate} " +
                 $"{(bookingDetails.ReturnDate != null ? $" Ritorno il: {bookingDetails.ReturnDate}" : "")}, " +
@@ -385,15 +410,15 @@ namespace TravelBot.Dialogs
             {
                 
                 cityDialogResult.isFake = true;
-                await stepContext.Context.SendActivityAsync($"isFake: {cityDialogResult.isFake}");
-                await stepContext.Context.SendActivityAsync($"travel date cityDialog: {bookingDetails.TravelDate}");
+                //  await stepContext.Context.SendActivityAsync($"isFake: {cityDialogResult.isFake}");
+                // await stepContext.Context.SendActivityAsync($"travel date cityDialog: {bookingDetails.TravelDate}");
                 return await stepContext.EndDialogAsync(cityDialogResult, cancellationToken);
             }
 
             else if (result.Value == "Si")
             {
                 cityDialogResult.isFake = false;
-                await stepContext.Context.SendActivityAsync($"isFake: {cityDialogResult.isFake}");
+                //  await stepContext.Context.SendActivityAsync($"isFake: {cityDialogResult.isFake}");
                 return await stepContext.EndDialogAsync(cityDialogResult, cancellationToken);
             }
             else if (result.Value == "No")
@@ -421,7 +446,7 @@ namespace TravelBot.Dialogs
                 var bookingString = (string)stepContext.Result;
                 BookingConverter converter = new BookingConverter();
                 BookingDetails bookingDetails = converter.ParseFromString(bookingString);
-                await stepContext.Context.SendActivityAsync($"RISULTATO BOTTONE CONFERMA: {bookingDetails.Destination}");
+            //   await stepContext.Context.SendActivityAsync($"RISULTATO BOTTONE CONFERMA: {bookingDetails.Destination}");
 
             return await stepContext.BeginDialogAsync(nameof(CityDialogResolver), bookingDetails, cancellationToken);
 

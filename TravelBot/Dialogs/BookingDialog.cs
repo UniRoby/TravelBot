@@ -89,85 +89,101 @@ namespace TravelBot.Dialogs
             
             CityDialogResult cityDialogResult = (CityDialogResult)stepContext.Result;
 
-            await stepContext.Context.SendActivityAsync($" cityDialog prompt value: {cityDialogResult.promtResult}");
+            //await stepContext.Context.SendActivityAsync($" cityDialog prompt value: {cityDialogResult.promtResult}");
             this.bookingDetails = cityDialogResult.bookingDetails;
 
-            await stepContext.Context.SendActivityAsync($"Bookin Origin di dopo cityDialog: {bookingDetails.Origin}");
-            await stepContext.Context.SendActivityAsync($"Bookin travel date di dopo cityDialog: {bookingDetails.TravelDate}");
             var result = cityDialogResult.promtResult;
             this.iataInfos = cityDialogResult.iataInfo;
             this.isFake = cityDialogResult.isFake;
-           // var bookingDetails = (BookingDetails)stepContext.Result;
-           
+            // var bookingDetails = (BookingDetails)stepContext.Result;
 
+            
             DateAndTimeConverter dateAndTimeConverter = new DateAndTimeConverter();
             //I voli da qualsiasi aeroporto dell'origin verso qualsiasi aeroporto della destination
-
-            if (this.iataInfos.allAirportsOrigin && this.iataInfos.allAirportsDestination)
-            {
-                await stepContext.Context.SendActivityAsync($"IF OVUNQUE");
-
-                foreach (var originIata in this.iataInfos.IATAlistOrigin)
-                {
-                    foreach(var destIata in this.iataInfos.IATAlistDestination)
-                    {
-                        //SearchFlights searchFlights = new SearchFlights(originIata, destIata, dateAndTimeConverter.ItalianToEnUs(bookingDetails.TravelDate), (bookingDetails.ReturnDate != null ? dateAndTimeConverter.ItalianToEnUs(bookingDetails.ReturnDate) : null), int.Parse(bookingDetails.PassengersNumber), (bookingDetails.Budget != null ? double.Parse(bookingDetails.Budget) : double.Parse("0")));
-                    }
-
-                }
-            }else if (this.iataInfos.allAirportsOrigin)
-            {
-                await stepContext.Context.SendActivityAsync($"IF TUTTi GLI AEROPORTI DI ORIGINE");
-                this.destinationIATA = this.iataInfos.IATAlistDestination[this.iataInfos.destinationIATAIndex];
-
-                await stepContext.Context.SendActivityAsync($"IF TUTTi GLI AEROPORTI DI ORIGINE  DESTINATION IATA ARRIVATA FINO A QUI: {this.destinationIATA}");
-                foreach (var originIata in this.iataInfos.IATAlistOrigin)
-                {
-                    //SearchFlights searchFlights = new SearchFlights(originIata,  this.destinationIATA, dateAndTimeConverter.ItalianToEnUs(bookingDetails.TravelDate), (bookingDetails.ReturnDate != null ? dateAndTimeConverter.ItalianToEnUs(bookingDetails.ReturnDate) : null), int.Parse(bookingDetails.PassengersNumber), (bookingDetails.Budget != null ? double.Parse(bookingDetails.Budget) : double.Parse("0")));
-                }
-            }
-            else if (this.iataInfos.allAirportsDestination)
-            {
-                await stepContext.Context.SendActivityAsync($"IF TUTTi GLI AEROPORTI DI DESTINAZIONE");
-
-                this.originIATA = this.iataInfos.IATAlistOrigin[this.iataInfos.originIATAIndex];
-                foreach (var originIata in this.iataInfos.IATAlistOrigin)
-                {
-                    //SearchFlights searchFlights = new SearchFlights(originIata,  this.destinationIATA, dateAndTimeConverter.ItalianToEnUs(bookingDetails.TravelDate), (bookingDetails.ReturnDate != null ? dateAndTimeConverter.ItalianToEnUs(bookingDetails.ReturnDate) : null), int.Parse(bookingDetails.PassengersNumber), (bookingDetails.Budget != null ? double.Parse(bookingDetails.Budget) : double.Parse("0")));
-                }
-            }
-            else
-            {
-                await stepContext.Context.SendActivityAsync($"ULTIMO CASO ENTAMBI AEROPORTI SELEZIOANTI O AVENTI UN SOLO AEROPORTO");
-                this.originIATA = this.iataInfos.IATAlistOrigin[this.iataInfos.originIATAIndex];
-                this.destinationIATA = this.iataInfos.IATAlistDestination[this.iataInfos.destinationIATAIndex];
-
-                await stepContext.Context.SendActivityAsync($" Cerco voli da {this.originIATA} a {this.destinationIATA} per finta (cerco sempre il primo iata");
-            }
-
-            //LOGICA PER TEST
-            this.originIATA = GetIATACode(this.bookingDetails.Origin);
-            this.destinationIATA = GetIATACode(this.bookingDetails.Destination);
-
-            //API VIAGGI
-            SearchFlights searchFlights = new SearchFlights(originIATA, destinationIATA, dateAndTimeConverter.ItalianToEnUs(this.bookingDetails.TravelDate), (this.bookingDetails.ReturnDate != null ? dateAndTimeConverter.ItalianToEnUs(this.bookingDetails.ReturnDate) : null), int.Parse(this.bookingDetails.PassengersNumber), (this.bookingDetails.Budget != null ? double.Parse(this.bookingDetails.Budget) : double.Parse("0")));
-
             if (this.isFake)
             {
-                await stepContext.Context.SendActivityAsync($" GetRandomFlights");
+                // await stepContext.Context.SendActivityAsync($" GetRandomFlights");
                 this.flightOptions = GetRandomFlights();
+
             }
             else
             {
 
-                this.flightOptions = searchFlights.StartSearch();
-                await stepContext.Context.SendActivityAsync($"Numero voli: {this.flightOptions.Count}");
+
+                if (this.iataInfos.allAirportsOrigin && this.iataInfos.allAirportsDestination)
+                {
+                    await stepContext.Context.SendActivityAsync($"RICERCA OVUNQUE NON ATTIVA");
+                    this.flightOptions = GetRandomFlights();
+
+                    foreach (var originIata in this.iataInfos.IATAlistOrigin)
+                    {
+                        foreach (var destIata in this.iataInfos.IATAlistDestination)
+                        {
+                            //SearchFlights searchFlights = new SearchFlights(originIata, destIata, dateAndTimeConverter.ItalianToEnUs(bookingDetails.TravelDate), (bookingDetails.ReturnDate != null ? dateAndTimeConverter.ItalianToEnUs(bookingDetails.ReturnDate) : null), int.Parse(bookingDetails.PassengersNumber), (bookingDetails.Budget != null ? double.Parse(bookingDetails.Budget) : double.Parse("0")));
+                            //var flights= searchFlights.StartSearch();
+                            //flights.ForEach(f=> this.flightOptions.Add(f));
+                        }
+
+                    }
+                }
+                else if (this.iataInfos.allAirportsOrigin)
+                {
+                    
+                    this.destinationIATA = this.iataInfos.IATAlistDestination[this.iataInfos.destinationIATAIndex];
+
+                    await stepContext.Context.SendActivityAsync($"RICERCA DA TUTTI GLI AEROPORTI DI ORIGINE NON ATTIVA");
+                    this.flightOptions = GetRandomFlights();
+
+                    foreach (var originIata in this.iataInfos.IATAlistOrigin)
+                    {
+                        //SearchFlights searchFlights = new SearchFlights(originIata,  this.destinationIATA, dateAndTimeConverter.ItalianToEnUs(bookingDetails.TravelDate), (bookingDetails.ReturnDate != null ? dateAndTimeConverter.ItalianToEnUs(bookingDetails.ReturnDate) : null), int.Parse(bookingDetails.PassengersNumber), (bookingDetails.Budget != null ? double.Parse(bookingDetails.Budget) : double.Parse("0")));
+                        //var flights= searchFlights.StartSearch();
+                        //flights.ForEach(f=> this.flightOptions.Add(f));
+                    }
+                }
+                else if (this.iataInfos.allAirportsDestination)
+                {
+                    
+                    await stepContext.Context.SendActivityAsync($"RICERCA VERSO TUTTI GLI AEROPORTI DI DESTINAZIONE NON ATTIVA");
+                    this.flightOptions = GetRandomFlights();
+                    this.originIATA = this.iataInfos.IATAlistOrigin[this.iataInfos.originIATAIndex];
+                    foreach (var originIata in this.iataInfos.IATAlistOrigin)
+                    {
+                        //SearchFlights searchFlights = new SearchFlights(originIata,  this.destinationIATA, dateAndTimeConverter.ItalianToEnUs(bookingDetails.TravelDate), (bookingDetails.ReturnDate != null ? dateAndTimeConverter.ItalianToEnUs(bookingDetails.ReturnDate) : null), int.Parse(bookingDetails.PassengersNumber), (bookingDetails.Budget != null ? double.Parse(bookingDetails.Budget) : double.Parse("0")));
+                        //var flights= searchFlights.StartSearch();
+                        //flights.ForEach(f=> this.flightOptions.Add(f));
+                    }
+                }
+                else
+                {
+
+                    this.originIATA = this.iataInfos.IATAlistOrigin[this.iataInfos.originIATAIndex];
+                    this.destinationIATA = this.iataInfos.IATAlistDestination[this.iataInfos.destinationIATAIndex];
+
+
+                    await stepContext.Context.SendActivityAsync($" Cerco voli da {this.originIATA} a {this.destinationIATA} " +
+                     $"il: {bookingDetails.TravelDate}, " +
+                     $"{(bookingDetails.ReturnDate != null ? $" Ritorno il: {bookingDetails.ReturnDate}" : "")}, " +
+                     $"numero passeggeri: {bookingDetails.PassengersNumber}" +
+                     $"{(bookingDetails.Budget != null ? $", budget: {(bookingDetails.Budget != "0" ? $"{bookingDetails.Budget}€" : "non specificato")}" : "")}");
+
+               
+                    SearchFlights searchFlights = new SearchFlights(this.originIATA, this.destinationIATA, dateAndTimeConverter.ItalianToEnUs(this.bookingDetails.TravelDate), (this.bookingDetails.ReturnDate != null ? dateAndTimeConverter.ItalianToEnUs(this.bookingDetails.ReturnDate) : null), int.Parse(this.bookingDetails.PassengersNumber), (this.bookingDetails.Budget != null ? double.Parse(this.bookingDetails.Budget) : double.Parse("0")));
+                    this.flightOptions = searchFlights.StartSearch();
+                        
+                }
+                if (this.flightOptions.IsNullOrEmpty())
+                {
+                    await stepContext.Context.SendActivityAsync("Nessun volo trovato");
+                    return await stepContext.EndDialogAsync(null, cancellationToken);
+                }
+                else
+                {
+                    await stepContext.Context.SendActivityAsync($"Numero voli trovati: {this.flightOptions.Count}");
+                }
             }
-            
-            if (this.flightOptions.IsNullOrEmpty() ) {
-                await stepContext.Context.SendActivityAsync("Nessun volo trovato");
-                return await stepContext.EndDialogAsync(null, cancellationToken);
-            }
+         
+          
 
             //return await stepContext.NextAsync(searchFlights.passengers.ToString(), cancellationToken);
             return await stepContext.NextAsync(this.bookingDetails, cancellationToken);
@@ -200,7 +216,7 @@ namespace TravelBot.Dialogs
 
                 var promptOptions = new PromptOptions
                 {
-                    Prompt = MessageFactory.Text("Scegli una tratta per rimanere aggiornato/a sulle variazioni di prezzo (altrimenti clicca su Termina)"),
+                    Prompt = MessageFactory.Text("Scegli una tratta per rimanere aggiornato/a sulle variazioni di prezzo oppure Termina la ricerca"),
                     Choices = GetChoices(this.flightOptions)
                 };
 
@@ -262,9 +278,9 @@ namespace TravelBot.Dialogs
 
             // Salva l'email inserita dall'utente
             var userEmail = (string)stepContext.Result;
-            
 
-            await stepContext.Context.SendActivityAsync($"booking Details date: {this.bookingDetails.TravelDate} ");
+
+            // await stepContext.Context.SendActivityAsync($"booking Details date: {this.bookingDetails.TravelDate} ");
 
 
             if (!SaveDemand(userEmail, this.bookingDetails))

@@ -57,8 +57,9 @@ namespace TravelBot.Utils
 
         public bool ContainsIATA(string city, List<string> listIATA)
         {
-            if (listIATA.Count > 1)
+            if (listIATA.Count >= 1)
             {
+                Console.WriteLine("IF CONTAINS METHOD");
                 foreach (string iata in listIATA)
                 {
                     if (city.Contains(iata))
@@ -91,12 +92,16 @@ namespace TravelBot.Utils
             // Lista delle preposizioni da rimuovere
             string[] preposizioni = { "per", "da", "a" };
 
+            Console.WriteLine(input); 
             // Dividi la stringa in parole
             string[] parole = input.Split(' ');
+
+            Console.WriteLine(parole);
 
             // Rimuovi le preposizioni e riunisci le parole
             string risultato = string.Join(" ", parole.Where(parola => !preposizioni.Contains(parola)));
 
+            Console.WriteLine(risultato);
             return risultato;
         }
 
