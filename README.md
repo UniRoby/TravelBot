@@ -75,6 +75,7 @@ Alle the secrets used in TravelBot are stored in the application settings.
 - Go to the Azure Bot resource  and click on the Test in Web Chat from the left panel
 
 ###DEMO
+![demoAzure](https://github.com/UniRoby/TravelBot/assets/107865801/9da3db52-8bfd-4607-bafd-04d43b5c9bf2)
 
 ![demo2_1](https://github.com/UniRoby/TravelBot/assets/107865801/f3d68b30-ea49-455d-9dfc-b5d57dac9556)
 
