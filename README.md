@@ -7,7 +7,7 @@ This function periodically checks (Friday at 7pm) the price of flights saved by 
 | ---------- | -------- | 
 | SERVER SQL | SQL Server installed and hosted in the cloud runs in Windows Server virtual machines |
 | DATABASE SQL | A simple DB to store all the City and Airport known, and to save client's demand  |
-| STORAGE ACCOUNT - CONTAINER - BLOB | Storing files for distributed access, (images,html, json)  |
+| STORAGE ACCOUNT - CONTAINER - BLOB | Storing files for distributed access (html email template)  |
 | AZURE COMUNICATION SERVICE | Which will allow you to send emails |
 | AZURE EMAIL COMUNICATION SERVICE | Which will allow to add Domain Name |
 | AZURE FUNCTION| Used to run time trigger logic |
