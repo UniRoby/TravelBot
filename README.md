@@ -8,11 +8,11 @@ This is a project for educational purposes. The project documentation is in the 
 
 # Bot Telegram
 To create a Telegram bot, simply refer to <a href="https://botostore.com/c/botfather/" target="_blank">@BotFather</a>'s guide. The creation of a bot produces a token necessary for the application to function.
-
+Search @azure_travel_bot in Telegram app to use the Bot
 
 
 # FLIGHTS API 
-Read the SearpApi Official Documentation: https://serpapi.com/google-flights-api
+Read the SearpApi official <a href="https://serpapi.com/google-flights-api" target="_blank">documentation</a>
 
 # Architecture
 <img width="640" alt="image" src="https://github.com/UniRoby/TravelBot/assets/107865801/7347f84a-d707-44b0-89a4-4be21fa7ed30">
