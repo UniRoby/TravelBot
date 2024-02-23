@@ -6,6 +6,8 @@ What are you waiting for, find your next destination! 🛫🏯🗼🗽🏝🏜�
 
 This is a project for educational purposes. The project documentation is in the respective branches.
 
+# Bot Telegram
+To create a Telegram bot, simply refer to <a href="https://botostore.com/c/botfather/" target="_blank">@BotFather</a>'s guide. The creation of a bot produces a token necessary for the application to function.
 
 
 
